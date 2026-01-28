@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Digital Canvas 🎨
 
-## Getting Started
+A decentralized infinite digital board for college students to permanently share notes and memories.
+**Hackathon MVP (3-Day Build)**
 
-First, run the development server:
+## 🚀 Features
+- **Infinite Canvas**: Zoomable, pannable board powered by `tldraw`.
+- **Permanent Storage**: Images uploaded to IPFS (Pinata) and recorded on Ethereum Sepolia.
+- **Ownership**: Only the uploader can delete their items (but history remains on-chain!).
+- **Web3 First**: Connect with RainbowKit, sign with Wagmi.
 
+## 🛠 Tech Stack
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Canvas**: tldraw
+- **Web3**: RainbowKit, Wagmi, Viem
+- **Smart Contract**: Solidity 0.8.20 (Hardhat / Remix)
+- **Storage**: Pinata IPFS
+
+## 📦 Setup Instructions
+
+### 1. Install Dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Setup
+Create a `.env.local` file with the following:
+```env
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_id_from_cloud_walletconnect_com
+NEXT_PUBLIC_PINATA_JWT=your_pinata_jwt_token
+NEXT_PUBLIC_GATEWAY_URL=https://gateway.pinata.cloud
+NEXT_PUBLIC_CONTRACT_ADDRESS=your_deployed_contract_address
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Deploy Smart Contract
+You need to deploy the contract to Sepolia Testnet.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Option A: Using Remix (Easiest)**
+1. Open [Remix IDE](https://remix.ethereum.org).
+2. Create a new file `DigitalCanvas.sol` and paste the content from `contracts/DigitalCanvas.sol`.
+3. Compile (Ctrl+S).
+4. Go to "Deploy & Run Transactions", select "Injected Provider - MetaMask".
+5. Ensure you are on **Sepolia** network in MetaMask.
+6. Click **Deploy**.
+7. Copy the Deployed Contract Address and paste it into `.env.local`.
 
-## Learn More
+**Option B: Using Hardhat**
+1. Add `PRIVATE_KEY` and `SEPOLIA_RPC` to `.env`.
+2. Run:
+```bash
+npx hardhat run scripts/deploy.ts --network sepolia
+```
+3. Copy the address to `.env.local`.
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Run the Dev Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎮 How to Demo (Hackathon Flow)
+1. **Landing**: Show the "Connect Wallet" button. Connect a Sepolia wallet.
+2. **Enter Canvas**: Click the button to go to `/canvas`.
+3. **Upload**:
+   - Click the floating **+** button.
+   - Select an image (e.g., a meme or note).
+   - Click "Upload".
+   - Approve the transaction.
+   - Wait for it to appear on the canvas.
+4. **Interact**: Pan and zoom around to show it's "Infinite".
+5. **Delete (Permanence Demo)**:
+   - Click your item to select it.
+   - Click the **Delete** button that appears.
+   - Confirm transaction.
+   - Item disappears locally.
+   - **Refresh the page**: The item reappears with a "DELETED" stamp, proving "Blockchain is forever!" 😎.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📜 License
+MIT
