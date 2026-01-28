@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { parseEther } from 'viem';
@@ -49,13 +49,17 @@ export function UploadModal({
         hash,
     });
 
+
+
     // Watch for success
-    if (isSuccess && uploading) {
-        setUploading(false);
-        onSuccess();
-        onClose();
-        toast.success("Item placed on chain! 🚀");
-    }
+    useEffect(() => {
+        if (isSuccess && uploading) {
+            setUploading(false);
+            onSuccess();
+            onClose();
+            toast.success("Item placed on chain! 🚀");
+        }
+    }, [isSuccess, uploading, onSuccess, onClose]);
 
     const handleUpload = async () => {
         if (!file) return;
