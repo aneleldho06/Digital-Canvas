@@ -83,7 +83,7 @@ export default function CanvasWrapper() {
 
                 if (editor.getShape(shapeId)) {
                     // Update props if changed (e.g. deleted status)
-                    editor.updateShape({ id: shapeId, type: 'digital-item', props });
+                    editor.updateShape({ id: shapeId, type: 'digital-item', props } as any);
                 } else {
                     shapesToCreate.push({
                         id: shapeId,
@@ -107,9 +107,9 @@ export default function CanvasWrapper() {
     const selectedShape = selectedShapeId ? editor?.getShape(selectedShapeId) : null;
 
     const canDelete = useMemo(() => {
-        if (!selectedShape || selectedShape.type !== 'digital-item') return false;
+        if (!selectedShape || (selectedShape.type as any) !== 'digital-item') return false;
         // Check ownership
-        const props = selectedShape.props as any;
+        const props = (selectedShape as any).props;
         // Simple case-insensitive check
         return address && props.owner.toLowerCase() === address.toLowerCase() && !props.isDeleted;
     }, [selectedShape, address]);
@@ -136,7 +136,7 @@ export default function CanvasWrapper() {
                     id: selectedShape.id,
                     type: 'digital-item',
                     props: { ...props, isDeleted: true }
-                });
+                } as any);
                 editor?.deselect(selectedShape.id);
             },
             onError: (err) => {
@@ -156,6 +156,7 @@ export default function CanvasWrapper() {
     return (
         <div className="relative w-full h-full">
             <Tldraw
+                licenseKey={process.env.NEXT_PUBLIC_TLDRAW_LICENSE_KEY}
                 onMount={(e) => {
                     setEditor(e);
                     // Set simple read only mode if not owner? No, everyone can pan/zoom.
