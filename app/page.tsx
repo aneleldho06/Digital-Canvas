@@ -12,9 +12,23 @@ export default function Home() {
   useEffect(() => setMounted(true), []);
 
   return (
-    <main className="min-h-screen text-white bg-cover bg-center bg-fixed overflow-x-hidden" style={{ backgroundImage: "url('/bg.png')" }}>
+    <main className="min-h-screen text-white bg-cover bg-center bg-fixed overflow-x-hidden relative" style={{ backgroundImage: "url('/bg.png')" }}>
+
+      {/* Navigation Bar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 flex justify-between items-center px-8 py-6 bg-black/20 backdrop-blur-md border-b border-white/5 transition-all">
+        <div className="text-xl font-bold tracking-tight flex items-center gap-2">
+          🎨 Digital Canvas
+        </div>
+        <div className="flex gap-8 text-sm font-semibold tracking-wide">
+          <a href="#hero" className="hover:text-blue-300 transition-colors opacity-80 hover:opacity-100">HOME</a>
+          <a href="#faq" className="hover:text-blue-300 transition-colors opacity-80 hover:opacity-100">FAQ</a>
+          <a href="#contact" className="hover:text-blue-300 transition-colors opacity-80 hover:opacity-100">CONTACT US</a>
+        </div>
+        <div className="w-[140px]"> {/* Spacer to balance logo */}
+        </div>
+      </nav>
       {/* 1. Hero Section */}
-      <section className="min-h-screen flex flex-col items-center justify-center p-8 text-center relative">
+      <section id="hero" className="min-h-screen flex flex-col items-center justify-center p-8 text-center relative pt-20">
         <div className="absolute inset-0 bg-black/30 pointer-events-none" /> {/* Overlay for readability */}
 
         <div className="relative z-10 flex flex-col items-center">
@@ -59,17 +73,17 @@ export default function Home() {
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 animate-bounce opacity-70">
-          <span className="text-4xl">⌄</span>
+          <a href="#faq" className="text-4xl cursor-pointer">⌄</a>
         </div>
       </section>
 
       {/* 2. FAQ Section */}
-      <section className="py-24 px-4 bg-black/40 backdrop-blur-sm min-h-[80vh] flex items-center">
+      <section id="faq" className="py-24 px-4 bg-black/40 backdrop-blur-sm min-h-[80vh] flex items-center">
         <FAQ />
       </section>
 
       {/* 3. Footer & Contact Section */}
-      <footer className="py-12 px-8 bg-black/80 text-center text-gray-400 border-t border-white/10">
+      <footer id="contact" className="py-12 px-8 bg-black/80 text-center text-gray-400 border-t border-white/10">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-6">
           <h3 className="text-2xl font-bold text-white">Get in Touch</h3>
           <p className="max-w-xl text-lg">
