@@ -3,6 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { FAQ } from '@/components/FAQ';
 
 export default function Home() {
   const { isConnected } = useAccount();
@@ -46,6 +47,8 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <FAQ />
       </div>
     </main>
   );
