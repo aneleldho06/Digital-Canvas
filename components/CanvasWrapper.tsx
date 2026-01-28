@@ -54,48 +54,60 @@ export default function CanvasWrapper() {
     useEffect(() => {
         if (!editor || !items) return;
 
+        // Debugging: Log items from contract
+        console.log("CanvasWrapper: Items from contract:", items);
+
         editor.run(() => {
             const shapesToCreate: any[] = [];
             const existingShapeIds = new Set(editor.getCurrentPageShapeIds());
 
-            items.forEach((item, index) => {
-                // Construct a stable ID based on chain ID or index
-                // We use 'digital-item' + index (assuming index is id). 
-                // Note: index in getAllItems corresponds to ID if array is ordered.
-                // But better to use index as Loop index if ID is just position.
-                // Contract ID is index.
-                const shapeId = createShapeId(`item-${index}`);
+            // Handle potential non-array return (though wagmi usually returns array)
+            const itemsArray = Array.isArray(items) ? items : [];
 
-                // If shape exists, check if we need to update? 
-                // For hackathon, assume immutable mostly, except deleted status.
-                // But if we want to "Fake undelete", we need to ensure deleted items are shown.
+            itemsArray.forEach((item, index) => {
+                // Defensive checks for properties
+                // Sometimes wagmi returns BigInts.
+                // We access properties safely.
+                const x = Number(item.x ?? 0);
+                const y = Number(item.y ?? 0);
+                const timestamp = Number(item.timestamp ?? 0);
+                const ipfsHash = item.ipfsHash || "";
+                const title = item.title || "";
+                const owner = item.owner || "";
+                const isDeleted = item.deleted || false;
+
+                // Log individual item if needed
+                // console.log(`Item ${index}:`, { x, y, ipfsHash, title });
+
+                const shapeId = createShapeId(`item-${index}`);
 
                 const props = {
                     w: 300,
                     h: 200,
-                    ipfsHash: item.ipfsHash,
-                    title: item.title,
-                    owner: item.owner,
-                    timestamp: Number(item.timestamp),
+                    ipfsHash,
+                    title,
+                    owner,
+                    timestamp,
                     idOnChain: index,
-                    isDeleted: item.deleted
+                    isDeleted
                 };
 
                 if (editor.getShape(shapeId)) {
-                    // Update props if changed (e.g. deleted status)
+                    // Update props if changed
                     editor.updateShape({ id: shapeId, type: 'digital-item', props } as any);
                 } else {
                     shapesToCreate.push({
                         id: shapeId,
                         type: 'digital-item',
-                        x: Number(item.x),
-                        y: Number(item.y),
+                        x: x,
+                        y: y,
                         props
                     });
                 }
             });
 
             if (shapesToCreate.length > 0) {
+                console.log("CanvasWrapper: Creating shapes:", shapesToCreate.length);
                 editor.createShapes(shapesToCreate);
             }
         });
